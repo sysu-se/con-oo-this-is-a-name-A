@@ -2,19 +2,20 @@
 	import { onMount } from 'svelte';
 	import { BASE_URL } from '@sudoku/constants';
 	import { modal } from '@sudoku/stores/modal';
-	import { grid } from '@sudoku/stores/grid';
+	import { encodeSudoku } from '@sudoku/sencode';
+	import gameStore from '../../../domain/gameStore';
 	import Clipboard from '../../Utils/Clipboard.svelte';
 
 	export let data = {};
 	export let hideModal;
 
-	const sencode = grid.getSencode($grid);
+	$: sencode = $gameStore.grid ? encodeSudoku($gameStore.grid) : '';
 
-	const link = BASE_URL + '#' + sencode;
-	const encodedLink = encodeURIComponent(link);
-	const facebookLink = 'https://www.facebook.com/sharer/sharer.php?u=' + encodedLink;
-	const twitterLink = 'https://twitter.com/intent/tweet?text=Check%20out%20this%20Sudoku%20puzzle!&url=' + encodedLink;
-	const mailToLink = 'mailto:?subject=A%20Sudoku%20puzzle%20for%20you&body=Here%27s%20a%20link%20to%20a%20Sudoku%20puzzle%20on%20sudoku.jonasgeiler.com%3A%0A%0A' + encodedLink;
+	$: link = BASE_URL + '#' + sencode;
+	$: encodedLink = encodeURIComponent(link);
+	$: facebookLink = 'https://www.facebook.com/sharer/sharer.php?u=' + encodedLink;
+	$: twitterLink = 'https://twitter.com/intent/tweet?text=Check%20out%20this%20Sudoku%20puzzle!&url=' + encodedLink;
+	$: mailToLink = 'mailto:?subject=A%20Sudoku%20puzzle%20for%20you&body=Here%27s%20a%20link%20to%20a%20Sudoku%20puzzle%20on%20sudoku.jonasgeiler.com%3A%0A%0A' + encodedLink;
 
 	let copyText;
 
